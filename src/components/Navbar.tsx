@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Menu, X } from "lucide-react";
+import logoImg from "@/assets/logo-crochet.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
