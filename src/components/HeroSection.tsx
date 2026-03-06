@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Button } from "@/components/ui/button";
+import YarnTextAnimation from "@/components/YarnTextAnimation";
 
 const HeroSection = () => {
   return (
