@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, Menu, X } from "lucide-react";
+import logoImg from "@/assets/logo-crochet.png";
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,8 +15,8 @@ const Navbar = () => {
       className="fixed top-0 left-0 right-0 z-50 bg-background/80 backdrop-blur-md border-b border-border"
     >
       <div className="container mx-auto flex items-center justify-between py-4 px-6">
-        <a href="#" className="font-display text-2xl font-semibold text-foreground tracking-wide">
-          Sava Crochets
+        <a href="#" className="flex items-center">
+          <img src={logoImg} alt="Sava Crochets" className="h-8 md:h-10 w-auto" />
         </a>
 
         <div className="hidden md:flex items-center gap-8">
