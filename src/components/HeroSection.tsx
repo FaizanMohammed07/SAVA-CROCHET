@@ -1,6 +1,7 @@
 import { motion } from "framer-motion";
 import heroBg from "@/assets/hero-bg.jpg";
 import { Button } from "@/components/ui/button";
+import YarnTextAnimation from "@/components/YarnTextAnimation";
 
 const HeroSection = () => {
   return (
@@ -27,15 +28,17 @@ const HeroSection = () => {
             Handmade with love
           </motion.p>
 
-          <motion.h1
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-5xl md:text-7xl font-display font-light leading-tight text-foreground mb-6"
-          >
-            Handcrafted With Love –{" "}
-            <span className="italic text-primary">Welcome to Sava Crochets</span>
-          </motion.h1>
+          <div className="mb-6">
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.3, duration: 0.6 }}
+              className="text-2xl md:text-3xl font-display font-light text-foreground mb-2"
+            >
+              Handcrafted With Love –
+            </motion.p>
+            <YarnTextAnimation />
+          </div>
 
           <motion.p
             initial={{ opacity: 0, y: 20 }}
