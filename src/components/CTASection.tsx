@@ -17,12 +17,19 @@ const CTASection = () => {
           className="text-center max-w-2xl mx-auto"
         >
           <h2 className="text-4xl md:text-6xl font-display font-light text-foreground mb-6 leading-tight">
-            Discover the Art of Handmade Crochet
+            Find Your Perfect
+            <br />
+            Handcrafted Treasure
           </h2>
           <p className="text-muted-foreground text-lg mb-10 leading-relaxed">
-            Each piece is a testament to patience, creativity, and the beauty of handmade artistry. Find your perfect handcrafted treasure.
+            Whether it's a gift for someone special or a treat for yourself,
+            every Sava Crochets piece is made to be cherished. Browse our
+            collection and find something that speaks to you.
           </p>
-          <Button size="lg" className="rounded-full px-10 py-6 text-sm tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:scale-105">
+          <Button
+            size="lg"
+            className="rounded-full px-10 py-6 text-sm tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:scale-105"
+          >
             Shop Now
           </Button>
         </motion.div>

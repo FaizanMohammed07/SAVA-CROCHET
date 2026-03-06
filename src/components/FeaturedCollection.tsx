@@ -8,12 +8,42 @@ import product5 from "@/assets/product-5.jpg";
 import product6 from "@/assets/product-6.jpg";
 
 const products = [
-  { name: "Amigurumi Bear", price: "$45", image: product1, tag: "Best Seller" },
-  { name: "Sage Baby Blanket", price: "$89", image: product2, tag: "New" },
-  { name: "Floral Tote Bag", price: "$62", image: product3, tag: null },
-  { name: "Artisan Coaster Set", price: "$28", image: product4, tag: null },
-  { name: "Bucket Hat", price: "$38", image: product5, tag: "New" },
-  { name: "Flower Bouquet", price: "$55", image: product6, tag: "Popular" },
+  {
+    name: "Amigurumi Teddy Bear",
+    price: "₹2,499",
+    image: product1,
+    tag: "Best Seller",
+  },
+  {
+    name: "Sage Baby Blanket",
+    price: "₹4,999",
+    image: product2,
+    tag: "New Arrival",
+  },
+  {
+    name: "Boho Floral Tote Bag",
+    price: "₹3,499",
+    image: product3,
+    tag: "Trending",
+  },
+  {
+    name: "Artisan Coaster Set (6pc)",
+    price: "₹1,299",
+    image: product4,
+    tag: null,
+  },
+  {
+    name: "Summer Bucket Hat",
+    price: "₹1,999",
+    image: product5,
+    tag: "New Arrival",
+  },
+  {
+    name: "Crochet Flower Bouquet",
+    price: "₹2,999",
+    image: product6,
+    tag: "Popular",
+  },
 ];
 
 const FeaturedCollection = () => {
@@ -27,10 +57,16 @@ const FeaturedCollection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-3">Curated for you</p>
+          <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-3">
+            Curated for you
+          </p>
           <h2 className="text-4xl md:text-5xl font-display font-light text-foreground">
             Featured Collection
           </h2>
+          <p className="text-muted-foreground mt-4 max-w-lg mx-auto">
+            Each piece is handmade to order. Custom colors and sizes available —
+            just reach out!
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -70,7 +106,9 @@ const FeaturedCollection = () => {
               <h3 className="font-display text-lg text-foreground group-hover:text-primary transition-colors">
                 {product.name}
               </h3>
-              <p className="text-muted-foreground text-sm mt-1">{product.price}</p>
+              <p className="text-muted-foreground text-sm mt-1">
+                {product.price}
+              </p>
             </motion.div>
           ))}
         </div>

@@ -8,7 +8,16 @@ import gallery1 from "@/assets/gallery-1.jpg";
 import gallery2 from "@/assets/gallery-2.jpg";
 import craftsmanship from "@/assets/craftsmanship.jpg";
 
-const images = [product1, gallery1, product3, product6, craftsmanship, product2, gallery2, product5];
+const images = [
+  product1,
+  gallery1,
+  product3,
+  product6,
+  craftsmanship,
+  product2,
+  gallery2,
+  product5,
+];
 
 const GallerySection = () => {
   return (
@@ -21,10 +30,16 @@ const GallerySection = () => {
           transition={{ duration: 0.6 }}
           className="text-center mb-16"
         >
-          <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-3">@savacrochets</p>
+          <p className="text-sm tracking-[0.3em] uppercase text-muted-foreground mb-3">
+            Follow @savacrochets
+          </p>
           <h2 className="text-4xl md:text-5xl font-display font-light text-foreground">
             From Our Studio
           </h2>
+          <p className="text-muted-foreground mt-4 max-w-lg mx-auto">
+            A peek into the handmade world of Sava Crochets — behind the scenes,
+            work in progress, and finished pieces.
+          </p>
         </motion.div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
