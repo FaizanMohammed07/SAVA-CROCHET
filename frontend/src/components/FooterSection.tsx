@@ -1,7 +1,15 @@
 import { motion } from "framer-motion";
 import { Instagram, Facebook, Heart, MessageCircle } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const FooterSection = () => {
+  const quickLinks = [
+    { label: "Shop", to: "/shop" },
+    { label: "About", to: "/#about" },
+    { label: "Gallery", to: "/#gallery" },
+    { label: "Custom Order", to: "/reservations/new" },
+  ];
+
   return (
     <footer
       id="contact"
@@ -50,14 +58,14 @@ const FooterSection = () => {
           <div>
             <h4 className="font-display text-lg mb-4">Quick Links</h4>
             <div className="flex flex-col gap-3">
-              {["Shop", "About", "Gallery", "Contact"].map((link) => (
-                <a
-                  key={link}
-                  href={`#${link.toLowerCase()}`}
+              {quickLinks.map((link) => (
+                <Link
+                  key={link.label}
+                  to={link.to}
                   className="text-sm text-primary-foreground/60 hover:text-primary-foreground transition-colors"
                 >
-                  {link}
-                </a>
+                  {link.label}
+                </Link>
               ))}
             </div>
           </div>

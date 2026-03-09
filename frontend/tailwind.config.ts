@@ -2,7 +2,12 @@ import type { Config } from "tailwindcss";
 
 export default {
   darkMode: ["class"],
-  content: ["./pages/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}", "./app/**/*.{ts,tsx}", "./src/**/*.{ts,tsx}"],
+  content: [
+    "./pages/**/*.{ts,tsx}",
+    "./components/**/*.{ts,tsx}",
+    "./app/**/*.{ts,tsx}",
+    "./src/**/*.{ts,tsx}",
+  ],
   prefix: "",
   theme: {
     container: {
@@ -14,8 +19,8 @@ export default {
     },
     extend: {
       fontFamily: {
-        display: ['"Cormorant Garamond"', 'serif'],
-        body: ['Outfit', 'sans-serif'],
+        display: ['"Cormorant Garamond"', "serif"],
+        body: ["Outfit", "sans-serif"],
       },
       colors: {
         border: "hsl(var(--border))",
@@ -89,7 +94,7 @@ export default {
           "0%": { opacity: "0" },
           "100%": { opacity: "1" },
         },
-        "float": {
+        float: {
           "0%, 100%": { transform: "translateY(0px)" },
           "50%": { transform: "translateY(-20px)" },
         },
@@ -97,14 +102,59 @@ export default {
           "0%, 100%": { transform: "translateY(0px) rotate(0deg)" },
           "50%": { transform: "translateY(-15px) rotate(5deg)" },
         },
+        "fly-to-cart": {
+          "0%": { opacity: "1", transform: "scale(1) translate(0, 0)" },
+          "40%": {
+            opacity: "0.9",
+            transform: "scale(0.6) translate(30px, -60px)",
+          },
+          "100%": {
+            opacity: "0",
+            transform: "scale(0.2) translate(150px, -200px)",
+          },
+        },
+        "cart-bounce": {
+          "0%, 100%": { transform: "scale(1)" },
+          "30%": { transform: "scale(1.3)" },
+          "60%": { transform: "scale(0.9)" },
+        },
+        "success-check": {
+          "0%": { opacity: "0", transform: "scale(0) rotate(-45deg)" },
+          "50%": { opacity: "1", transform: "scale(1.2) rotate(0deg)" },
+          "100%": { opacity: "1", transform: "scale(1) rotate(0deg)" },
+        },
+        shimmer: {
+          "0%": { transform: "translateX(-100%)" },
+          "100%": { transform: "translateX(100%)" },
+        },
+        "pulse-soft": {
+          "0%, 100%": { opacity: "1" },
+          "50%": { opacity: "0.7" },
+        },
+        "slide-up": {
+          "0%": { opacity: "0", transform: "translateY(10px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
+        },
+        "scale-in": {
+          "0%": { opacity: "0", transform: "scale(0.95)" },
+          "100%": { opacity: "1", transform: "scale(1)" },
+        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
         "fade-up": "fade-up 0.8s ease-out forwards",
         "fade-in": "fade-in 0.6s ease-out forwards",
-        "float": "float 6s ease-in-out infinite",
+        float: "float 6s ease-in-out infinite",
         "float-slow": "float-slow 8s ease-in-out infinite",
+        "fly-to-cart":
+          "fly-to-cart 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) forwards",
+        "cart-bounce": "cart-bounce 0.6s ease-in-out",
+        "success-check": "success-check 0.5s ease-out forwards",
+        shimmer: "shimmer 2s infinite",
+        "pulse-soft": "pulse-soft 2s ease-in-out infinite",
+        "slide-up": "slide-up 0.3s ease-out forwards",
+        "scale-in": "scale-in 0.2s ease-out forwards",
       },
     },
   },

@@ -1,0 +1,1156 @@
+###############################################################################
+#  SAVA CROCHETS — Complete API Test Suite (REST Client / .http)
+#  Usage: Install "REST Client" VS Code extension, then click "Send Request"
+###############################################################################
+
+### Variables — update these after running the relevant requests
+@baseUrl = http://localhost:5000/api
+@accessToken = YOUR_ACCESS_TOKEN_HERE
+@adminToken = YOUR_ADMIN_TOKEN_HERE
+@refreshTokenValue = YOUR_REFRESH_TOKEN_HERE
+
+# IDs — fill in after creating resources
+@userId = YOUR_USER_ID
+@productId = YOUR_PRODUCT_ID
+@cartItemId = YOUR_CART_ITEM_ID
+@orderId = YOUR_ORDER_ID
+@reservationId = YOUR_RESERVATION_ID
+@paymentId = YOUR_PAYMENT_ID
+@couponId = YOUR_COUPON_ID
+@addressId = YOUR_ADDRESS_ID
+@reviewId = YOUR_REVIEW_ID
+
+###############################################################################
+#                          🏥 HEALTH CHECK
+###############################################################################
+
+### Health Check
+GET {{baseUrl}}/health
+
+###############################################################################
+#                          🔐 AUTH — Registration & Login
+###############################################################################
+
+### Register a new user
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Sava",
+  "lastName": "Test",
+  "email": "savatest@example.com",
+  "password": "Test@1234",
+  "phone": "9876543210"
+}
+
+###
+
+### Register an admin user (for testing admin routes)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Admin",
+  "lastName": "Sava",
+  "email": "admin@savacrochets.com",
+  "password": "Admin@1234",
+  "phone": "9876543211"
+}
+
+###
+
+### Login — copy the accessToken & refreshToken from the response
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "savatest@example.com",
+  "password": "Test@1234"
+}
+
+###
+
+### Login as Admin
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "admin@savacrochets.com",
+  "password": "Admin@1234"
+}
+
+###############################################################################
+#                          🔐 AUTH — Token & Password
+###############################################################################
+
+### Get current user profile (me)
+GET {{baseUrl}}/auth/me
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Refresh Token
+POST {{baseUrl}}/auth/refresh-token
+Content-Type: application/json
+
+{
+  "refreshToken": "{{refreshTokenValue}}"
+}
+
+###
+
+### Logout
+POST {{baseUrl}}/auth/logout
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Forgot Password — sends reset email
+POST {{baseUrl}}/auth/forgot-password
+Content-Type: application/json
+
+{
+  "email": "savatest@example.com"
+}
+
+###
+
+### Reset Password (replace :token with the token from email)
+PUT {{baseUrl}}/auth/reset-password/RESET_TOKEN_HERE
+Content-Type: application/json
+
+{
+  "password": "NewPass@1234"
+}
+
+###
+
+### Verify Email (replace :token with the token from email)
+GET {{baseUrl}}/auth/verify-email/VERIFICATION_TOKEN_HERE
+
+###
+
+### Change Password (requires login)
+PUT {{baseUrl}}/auth/change-password
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "currentPassword": "Test@1234",
+  "newPassword": "Changed@1234"
+}
+
+###############################################################################
+#                          👤 USER — Profile
+###############################################################################
+
+### Get User Profile
+GET {{baseUrl}}/users/profile
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Update Profile
+PUT {{baseUrl}}/users/profile
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "firstName": "Sava",
+  "lastName": "Updated",
+  "phone": "9988776655"
+}
+
+###
+
+### Update Avatar (file upload)
+PUT {{baseUrl}}/users/avatar
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=----AvatarBoundary
+
+------AvatarBoundary
+Content-Disposition: form-data; name="avatar"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+< ./test-assets/avatar.jpg
+------AvatarBoundary--
+
+###############################################################################
+#                          📬 USER — Addresses
+###############################################################################
+
+### Get All Addresses
+GET {{baseUrl}}/users/addresses
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Add Address
+POST {{baseUrl}}/users/addresses
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "fullName": "Sava Test",
+  "phone": "9876543210",
+  "addressLine1": "123, Crochet Lane",
+  "addressLine2": "Near Yarn Market",
+  "city": "Mumbai",
+  "state": "Maharashtra",
+  "pincode": "400001",
+  "country": "India",
+  "isDefault": true
+}
+
+###
+
+### Update Address
+PUT {{baseUrl}}/users/addresses/{{addressId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "fullName": "Sava Updated",
+  "city": "Pune",
+  "state": "Maharashtra",
+  "pincode": "411001"
+}
+
+###
+
+### Delete Address
+DELETE {{baseUrl}}/users/addresses/{{addressId}}
+Authorization: Bearer {{accessToken}}
+
+###############################################################################
+#                          ❤️ USER — Wishlist
+###############################################################################
+
+### Get Wishlist
+GET {{baseUrl}}/users/wishlist
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Add Product to Wishlist
+POST {{baseUrl}}/users/wishlist/{{productId}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Remove Product from Wishlist
+DELETE {{baseUrl}}/users/wishlist/{{productId}}
+Authorization: Bearer {{accessToken}}
+
+###############################################################################
+#                          🧶 PRODUCTS — Public
+###############################################################################
+
+### Get All Products (with optional query params)
+GET {{baseUrl}}/products?page=1&limit=10
+
+###
+
+### Get All Products with Filters
+GET {{baseUrl}}/products?category=amigurumi&minPrice=100&maxPrice=5000&inStock=true&sort=-price&page=1&limit=10
+
+###
+
+### Search Products
+GET {{baseUrl}}/products/search?q=crochet+bear&page=1&limit=10
+
+###
+
+### Get Featured Products
+GET {{baseUrl}}/products/featured
+
+###
+
+### Get Products by Category
+GET {{baseUrl}}/products/category/amigurumi
+
+###
+
+### Get Single Product
+GET {{baseUrl}}/products/{{productId}}
+
+###
+
+### Get Product Reviews
+GET {{baseUrl}}/products/{{productId}}/reviews
+
+###############################################################################
+#                          🧶 PRODUCTS — Reviews (Auth Required)
+###############################################################################
+
+### Add Review
+POST {{baseUrl}}/products/{{productId}}/reviews
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "rating": 5,
+  "title": "Amazing crochet work!",
+  "comment": "The amigurumi bear is beautifully handcrafted. Love the attention to detail!"
+}
+
+###############################################################################
+#                          🧶 PRODUCTS — Admin CRUD
+###############################################################################
+
+### Create Product (Admin — multipart with images)
+POST {{baseUrl}}/products
+Authorization: Bearer {{adminToken}}
+Content-Type: multipart/form-data; boundary=----ProductBoundary
+
+------ProductBoundary
+Content-Disposition: form-data; name="productName"
+
+Handmade Crochet Teddy Bear
+------ProductBoundary
+Content-Disposition: form-data; name="description"
+
+Beautiful handmade crochet teddy bear, made with premium cotton yarn. Perfect gift for kids and collectors.
+------ProductBoundary
+Content-Disposition: form-data; name="price"
+
+1299
+------ProductBoundary
+Content-Disposition: form-data; name="category"
+
+amigurumi
+------ProductBoundary
+Content-Disposition: form-data; name="stock"
+
+25
+------ProductBoundary
+Content-Disposition: form-data; name="material"
+
+Cotton Yarn
+------ProductBoundary
+Content-Disposition: form-data; name="colors[0]"
+
+Brown
+------ProductBoundary
+Content-Disposition: form-data; name="colors[1]"
+
+White
+------ProductBoundary
+Content-Disposition: form-data; name="size"
+
+Medium
+------ProductBoundary
+Content-Disposition: form-data; name="difficulty"
+
+intermediate
+------ProductBoundary
+Content-Disposition: form-data; name="tags[0]"
+
+teddy
+------ProductBoundary
+Content-Disposition: form-data; name="tags[1]"
+
+bear
+------ProductBoundary
+Content-Disposition: form-data; name="tags[2]"
+
+gift
+------ProductBoundary
+Content-Disposition: form-data; name="isFeatured"
+
+true
+------ProductBoundary
+Content-Disposition: form-data; name="images"; filename="teddy1.jpg"
+Content-Type: image/jpeg
+
+< ./test-assets/teddy1.jpg
+------ProductBoundary--
+
+###
+
+### Create Product (Admin — JSON, no images)
+POST {{baseUrl}}/products
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "productName": "Crochet Coaster Set",
+  "description": "Set of 4 handmade crochet coasters in pastel colors. Great for home decor.",
+  "price": 499,
+  "category": "home-decor",
+  "stock": 50,
+  "material": "Cotton Blend",
+  "colors": ["Pastel Pink", "Pastel Blue", "Mint", "Lavender"],
+  "size": "Small",
+  "difficulty": "beginner",
+  "tags": ["coaster", "home", "decor", "pastel"],
+  "isFeatured": false
+}
+
+###
+
+### Update Product
+PUT {{baseUrl}}/products/{{productId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "price": 1199,
+  "stock": 30,
+  "isFeatured": true,
+  "salePrice": 999
+}
+
+###
+
+### Delete Product
+DELETE {{baseUrl}}/products/{{productId}}
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Delete a Product Image
+DELETE {{baseUrl}}/products/{{productId}}/images/IMAGE_PUBLIC_ID_HERE
+Authorization: Bearer {{adminToken}}
+
+###############################################################################
+#                          🛒 CART
+###############################################################################
+
+### Get Cart
+GET {{baseUrl}}/cart
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Add Item to Cart
+POST {{baseUrl}}/cart/items
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}",
+  "quantity": 2,
+  "color": "Brown",
+  "size": "Medium"
+}
+
+###
+
+### Update Cart Item Quantity
+PUT {{baseUrl}}/cart/items/{{cartItemId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "quantity": 3
+}
+
+###
+
+### Remove Cart Item
+DELETE {{baseUrl}}/cart/items/{{cartItemId}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Clear Cart
+DELETE {{baseUrl}}/cart
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Apply Coupon to Cart
+POST {{baseUrl}}/cart/apply-coupon
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "couponCode": "SAVA20"
+}
+
+###############################################################################
+#                          📦 ORDERS
+###############################################################################
+
+### Create Order (Razorpay)
+POST {{baseUrl}}/orders
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "shippingAddress": {
+    "fullName": "Sava Test",
+    "phone": "9876543210",
+    "addressLine1": "123, Crochet Lane",
+    "addressLine2": "Near Yarn Market",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "pincode": "400001",
+    "country": "India"
+  },
+  "paymentMethod": "razorpay",
+  "notes": "Please wrap it nicely",
+  "isGift": false
+}
+
+###
+
+### Create Order (COD)
+POST {{baseUrl}}/orders
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "shippingAddress": {
+    "fullName": "Sava Test",
+    "phone": "9876543210",
+    "addressLine1": "123, Crochet Lane",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "pincode": "400001",
+    "country": "India"
+  },
+  "paymentMethod": "cod",
+  "isGift": true,
+  "giftMessage": "Happy Birthday! 🎂"
+}
+
+###
+
+### Get My Orders
+GET {{baseUrl}}/orders?page=1&limit=10
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Get My Orders (filter by status)
+GET {{baseUrl}}/orders?status=pending&page=1&limit=5
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Get Single Order
+GET {{baseUrl}}/orders/{{orderId}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Track Order
+GET {{baseUrl}}/orders/{{orderId}}/track
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Cancel Order
+POST {{baseUrl}}/orders/{{orderId}}/cancel
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "reason": "Changed my mind"
+}
+
+###############################################################################
+#                          🎨 RESERVATIONS (Custom Orders)
+###############################################################################
+
+### Create Reservation (JSON)
+POST {{baseUrl}}/reservations
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "designRequest": "I want a custom crochet elephant in pastel blue with a small bow tie. Approximately 12 inches tall.",
+  "colorPreference": "Pastel Blue, White, Light Grey",
+  "size": "Large",
+  "category": "amigurumi",
+  "deliveryDeadline": "2026-04-15",
+  "notes": "This is a birthday gift, please add a small name tag with 'Arya'"
+}
+
+###
+
+### Create Reservation (with reference images — multipart)
+POST {{baseUrl}}/reservations
+Authorization: Bearer {{accessToken}}
+Content-Type: multipart/form-data; boundary=----ReservBoundary
+
+------ReservBoundary
+Content-Disposition: form-data; name="designRequest"
+
+Custom crochet bunny plush toy with floppy ears
+------ReservBoundary
+Content-Disposition: form-data; name="colorPreference"
+
+Pink, White
+------ReservBoundary
+Content-Disposition: form-data; name="size"
+
+Medium
+------ReservBoundary
+Content-Disposition: form-data; name="category"
+
+amigurumi
+------ReservBoundary
+Content-Disposition: form-data; name="deliveryDeadline"
+
+2026-05-01
+------ReservBoundary
+Content-Disposition: form-data; name="referenceImages"; filename="ref1.jpg"
+Content-Type: image/jpeg
+
+< ./test-assets/ref1.jpg
+------ReservBoundary--
+
+###
+
+### Get My Reservations
+GET {{baseUrl}}/reservations?page=1&limit=10
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Get Single Reservation
+GET {{baseUrl}}/reservations/{{reservationId}}
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Cancel Reservation
+POST {{baseUrl}}/reservations/{{reservationId}}/cancel
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "reason": "No longer needed"
+}
+
+###
+
+### Accept Price Estimate (after admin provides estimate)
+POST {{baseUrl}}/reservations/{{reservationId}}/accept-price
+Authorization: Bearer {{accessToken}}
+
+###############################################################################
+#                          💳 PAYMENTS
+###############################################################################
+
+### Verify Razorpay Payment (after payment on frontend)
+POST {{baseUrl}}/payments/razorpay/verify
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "razorpay_order_id": "order_XXXXXXXXXXXXX",
+  "razorpay_payment_id": "pay_XXXXXXXXXXXXX",
+  "razorpay_signature": "SIGNATURE_HASH_HERE"
+}
+
+###
+
+### Process Refund
+POST {{baseUrl}}/payments/refund/{{paymentId}}
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "orderId": "{{orderId}}",
+  "amount": 500,
+  "reason": "Product not as described"
+}
+
+###
+
+### Get Payment History
+GET {{baseUrl}}/payments/history?page=1&limit=10
+Authorization: Bearer {{accessToken}}
+
+###############################################################################
+#                          🔧 ADMIN — User Management
+###############################################################################
+
+### Get All Users
+GET {{baseUrl}}/admin/users?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Get All Users (search + filter)
+GET {{baseUrl}}/admin/users?search=sava&role=user&page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Get User by ID
+GET {{baseUrl}}/admin/users/{{userId}}
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Block/Unblock User
+PATCH {{baseUrl}}/admin/users/{{userId}}/block
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "isBlocked": true
+}
+
+###############################################################################
+#                          🔧 ADMIN — Order Management
+###############################################################################
+
+### Get All Orders
+GET {{baseUrl}}/admin/orders?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Get All Orders (filter by status)
+GET {{baseUrl}}/admin/orders?status=pending&page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Get Order by ID
+GET {{baseUrl}}/admin/orders/{{orderId}}
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Update Order Status — confirm
+PATCH {{baseUrl}}/admin/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "confirmed",
+  "note": "Payment verified, preparing order"
+}
+
+###
+
+### Update Order Status — processing
+PATCH {{baseUrl}}/admin/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "processing",
+  "note": "Order is being prepared"
+}
+
+###
+
+### Update Order Status — shipped
+PATCH {{baseUrl}}/admin/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "shipped",
+  "note": "Shipped via BlueDart",
+  "trackingNumber": "BD123456789",
+  "trackingUrl": "https://www.bluedart.com/track/BD123456789"
+}
+
+###
+
+### Update Order Status — out for delivery
+PATCH {{baseUrl}}/admin/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "out_for_delivery",
+  "note": "Out for delivery today"
+}
+
+###
+
+### Update Order Status — delivered
+PATCH {{baseUrl}}/admin/orders/{{orderId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "delivered",
+  "note": "Delivered successfully"
+}
+
+###############################################################################
+#                          🔧 ADMIN — Inventory
+###############################################################################
+
+### Get Inventory (low stock, pagination)
+GET {{baseUrl}}/admin/inventory?page=1&limit=20
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Get Low Stock Items
+GET {{baseUrl}}/admin/inventory?lowStock=true&page=1&limit=20
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Update Product Stock
+PATCH {{baseUrl}}/admin/inventory/{{productId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "stock": 100
+}
+
+###############################################################################
+#                          🔧 ADMIN — Reservations
+###############################################################################
+
+### Get All Reservations
+GET {{baseUrl}}/admin/reservations?page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Get Reservations by Status
+GET {{baseUrl}}/admin/reservations?status=pending&page=1&limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Update Reservation — Price Estimate
+PATCH {{baseUrl}}/admin/reservations/{{reservationId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "price_estimated",
+  "estimatedPrice": 1500,
+  "estimatedCompletionDays": 14,
+  "adminNotes": "Beautiful design! Will use premium cotton yarn.",
+  "priority": "normal"
+}
+
+###
+
+### Update Reservation — Approve
+PATCH {{baseUrl}}/admin/reservations/{{reservationId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "approved",
+  "adminNotes": "Customer accepted price. Starting production."
+}
+
+###
+
+### Update Reservation — In Production
+PATCH {{baseUrl}}/admin/reservations/{{reservationId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "in_production",
+  "adminNotes": "Work started, 50% yarn done"
+}
+
+###
+
+### Update Reservation — Completed
+PATCH {{baseUrl}}/admin/reservations/{{reservationId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "completed",
+  "adminNotes": "Finished! Ready for shipping."
+}
+
+###
+
+### Update Reservation — Reject
+PATCH {{baseUrl}}/admin/reservations/{{reservationId}}/status
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "status": "rejected",
+  "rejectionReason": "Design too complex for the requested deadline"
+}
+
+###############################################################################
+#                          🔧 ADMIN — Coupons
+###############################################################################
+
+### Create Coupon (Percentage)
+POST {{baseUrl}}/admin/coupons
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "code": "SAVA20",
+  "description": "20% off on all products",
+  "discountType": "percentage",
+  "discountValue": 20,
+  "minOrderAmount": 500,
+  "maxDiscount": 1000,
+  "startDate": "2026-03-01",
+  "endDate": "2026-12-31",
+  "usageLimit": 500,
+  "perUserLimit": 2,
+  "isActive": true
+}
+
+###
+
+### Create Coupon (Flat Discount)
+POST {{baseUrl}}/admin/coupons
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "code": "FLAT200",
+  "description": "Flat ₹200 off on orders above ₹999",
+  "discountType": "flat",
+  "discountValue": 200,
+  "minOrderAmount": 999,
+  "startDate": "2026-03-01",
+  "endDate": "2026-06-30",
+  "usageLimit": 100,
+  "perUserLimit": 1,
+  "isActive": true
+}
+
+###
+
+### Get All Coupons
+GET {{baseUrl}}/admin/coupons
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Update Coupon
+PUT {{baseUrl}}/admin/coupons/{{couponId}}
+Authorization: Bearer {{adminToken}}
+Content-Type: application/json
+
+{
+  "discountValue": 25,
+  "endDate": "2027-03-31",
+  "isActive": true
+}
+
+###
+
+### Delete Coupon
+DELETE {{baseUrl}}/admin/coupons/{{couponId}}
+Authorization: Bearer {{adminToken}}
+
+###############################################################################
+#                          🔧 ADMIN — Payment Logs
+###############################################################################
+
+### Get Payment Logs
+GET {{baseUrl}}/admin/payments?page=1&limit=20
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Get Payment Logs (filter by status)
+GET {{baseUrl}}/admin/payments?status=completed&page=1&limit=20
+Authorization: Bearer {{adminToken}}
+
+###############################################################################
+#                          📊 ADMIN — Analytics Dashboard
+###############################################################################
+
+### Dashboard Overview
+GET {{baseUrl}}/admin/analytics/dashboard
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Revenue Analytics
+GET {{baseUrl}}/admin/analytics/revenue?period=30
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Revenue Analytics (custom date range)
+GET {{baseUrl}}/admin/analytics/revenue?startDate=2026-01-01&endDate=2026-03-07
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Most Sold Products
+GET {{baseUrl}}/admin/analytics/most-sold?limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Order Status Distribution
+GET {{baseUrl}}/admin/analytics/order-status
+Authorization: Bearer {{adminToken}}
+
+###
+
+### User Registration Trend
+GET {{baseUrl}}/admin/analytics/user-trend?period=90
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Category Sales
+GET {{baseUrl}}/admin/analytics/category-sales
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Visitor Statistics
+GET {{baseUrl}}/admin/analytics/visitors?period=30
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Most Viewed Products
+GET {{baseUrl}}/admin/analytics/most-viewed?limit=10
+Authorization: Bearer {{adminToken}}
+
+###
+
+### Returning Customer Stats
+GET {{baseUrl}}/admin/analytics/returning-customers
+Authorization: Bearer {{adminToken}}
+
+###############################################################################
+#                          👁️ VISITOR TRACKING
+###############################################################################
+
+### Track Product View (anonymous)
+POST {{baseUrl}}/visitors/product-view
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}"
+}
+
+###
+
+### Track Product View (authenticated)
+POST {{baseUrl}}/visitors/product-view
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "productId": "{{productId}}"
+}
+
+###
+
+### End Visitor Session
+POST {{baseUrl}}/visitors/end-session
+Content-Type: application/json
+
+{}
+
+###
+
+### Track Conversion Event
+POST {{baseUrl}}/visitors/conversion
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "type": "purchase",
+  "orderId": "{{orderId}}"
+}
+
+###############################################################################
+#                          🧪 EDGE CASES & ERROR TESTING
+###############################################################################
+
+### Login with wrong password (should return 401)
+POST {{baseUrl}}/auth/login
+Content-Type: application/json
+
+{
+  "email": "savatest@example.com",
+  "password": "WrongPassword123"
+}
+
+###
+
+### Access protected route without token (should return 401)
+GET {{baseUrl}}/users/profile
+
+###
+
+### Access admin route with user token (should return 403)
+GET {{baseUrl}}/admin/users
+Authorization: Bearer {{accessToken}}
+
+###
+
+### Get non-existent product (should return 404)
+GET {{baseUrl}}/products/000000000000000000000000
+
+###
+
+### Register with invalid email (should return 400)
+POST {{baseUrl}}/auth/register
+Content-Type: application/json
+
+{
+  "firstName": "Bad",
+  "lastName": "Email",
+  "email": "not-an-email",
+  "password": "Test@1234",
+  "phone": "9876543210"
+}
+
+###
+
+### Create order with empty cart (should return 400)
+POST {{baseUrl}}/orders
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "shippingAddress": {
+    "fullName": "Test",
+    "phone": "9876543210",
+    "addressLine1": "123 Test St",
+    "city": "Mumbai",
+    "state": "Maharashtra",
+    "pincode": "400001"
+  },
+  "paymentMethod": "cod"
+}
+
+###
+
+### Add to cart with invalid product ID (should return 404)
+POST {{baseUrl}}/cart/items
+Authorization: Bearer {{accessToken}}
+Content-Type: application/json
+
+{
+  "productId": "000000000000000000000000",
+  "quantity": 1
+}
+
+###############################################################################
+#  📝 USAGE NOTES
+#  
+#  1. Start the server: `npm run dev` (from backend/)
+#  2. Run requests in order — register → login → copy tokens → test
+#  3. After login, copy the accessToken and paste it in @accessToken above
+#  4. For admin routes, promote a user to admin in MongoDB:
+#     db.users.updateOne({email:"admin@savacrochets.com"}, {$set:{role:"admin"}})
+#  5. For file uploads, create a test-assets/ folder with sample images
+#  6. Replace placeholder IDs (YOUR_*) with actual IDs from responses
+#
+###############################################################################

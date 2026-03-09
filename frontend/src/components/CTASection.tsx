@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const CTASection = () => {
   return (
@@ -29,8 +30,9 @@ const CTASection = () => {
           <Button
             size="lg"
             className="rounded-full px-10 py-6 text-sm tracking-wider bg-primary text-primary-foreground hover:bg-primary/90 transition-all duration-300 hover:shadow-lg hover:scale-105"
+            asChild
           >
-            Shop Now
+            <Link to="/shop">Shop Now</Link>
           </Button>
         </motion.div>
       </div>
